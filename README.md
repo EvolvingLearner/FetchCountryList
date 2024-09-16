@@ -1,11 +1,12 @@
 # FetchCountryList App
-Displays all the countries in a RecyclerView
+Displays all the countries in a Fragment RecyclerView 
 
 ## Tech Stack
-- Kotlin
+- Kotlin programming language.
 - MVVM clean code architecture.
-- Manual Dependancy Injection
+- Manual Dependency Injection
 - Retrofit for API calls
+- Screen rotation handling
 
 <img align = "left" src='app/assets/CountriesApp.png' width ="250">  
  
