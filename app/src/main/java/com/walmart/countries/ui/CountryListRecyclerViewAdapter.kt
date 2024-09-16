@@ -18,7 +18,7 @@ class CountryListRecyclerViewAdapter : RecyclerView.Adapter<ItemViewHolder>() {
     fun setCountries(countries: List<Country>) {
         countryList.clear()
         this.countryList = countries.toMutableList()
-        this.notifyDataSetChanged();
+        this.notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
