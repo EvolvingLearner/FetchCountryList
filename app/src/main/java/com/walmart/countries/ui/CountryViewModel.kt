@@ -27,7 +27,6 @@ class CountryViewModel(private val countryRepository: CountriesRepository) : Vie
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         onError("Exception handled: ${throwable.localizedMessage}")
     }
-
     fun getAllCountries() {
 
         job = viewModelScope.launch {
