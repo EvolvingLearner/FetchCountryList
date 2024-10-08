@@ -15,13 +15,13 @@ import com.walmart.countries.model.ViewModelFactory
 
 /**
  * CountryListFragment representing a countries list of Items.
- * Fetch list from viewmodel and set to CountryListRecyclerViewAdapter
+ * Fetch list from viewmodel and set to CountryListAdapter
  * Show Error message on Error Conditions
  */
 class CountryListFragment : Fragment() {
 
     private val viewModel: CountryViewModel by viewModels { ViewModelFactory(CountryApplication.appModule.countriesRepository) }
-    private lateinit var _adapter: CountryListRecyclerViewAdapter
+    private lateinit var _adapter: CountryListAdapter
     private lateinit var countryListBinding: FragmentCountryListBinding
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class CountryListFragment : Fragment() {
     ): View {
         countryListBinding = FragmentCountryListBinding.inflate(inflater, container, false)
         countryListBinding.recyclerView.layoutManager = LinearLayoutManager(context)
-        _adapter = CountryListRecyclerViewAdapter()
+        _adapter = CountryListAdapter()
         // fetch countries list
         viewModel.getAllCountries()
         return countryListBinding.root
@@ -41,7 +41,7 @@ class CountryListFragment : Fragment() {
 
         viewModel.countryList.observe(viewLifecycleOwner) { countries ->
             countries?.let {
-                _adapter.setCountries(it)
+                _adapter.submitList(it)
             }
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {

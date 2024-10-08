@@ -19,9 +19,14 @@ import kotlinx.coroutines.launch
  * Fetch Countries list from repository using Coroutine and store in MutableLiveData
  * Handle NetworkState on response Conditions
  */
+sealed interface ListItem {
+    data class CountryListItem(val country: Country) : ListItem
+    data class HeaderListItem(val header: Char) : ListItem
+}
+
 class CountryViewModel(private val countryRepository: CountriesRepository) : ViewModel() {
     val errorMessage = MutableLiveData<String>()
-    val countryList = MutableLiveData<List<Country>>()
+    val countryList = MutableLiveData<List<ListItem>>()
     private var job: Job? = null
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -34,7 +39,7 @@ class CountryViewModel(private val countryRepository: CountriesRepository) : Vie
                 .collect { result ->
                     when (result) {
                         is NetworkState.Success -> {
-                            countryList.postValue(result.data)
+                            countryList.value = prepareHeaderList(result.data)
                         }
 
                         is NetworkState.Error -> {
@@ -47,6 +52,20 @@ class CountryViewModel(private val countryRepository: CountriesRepository) : Vie
                     }
                 }
         }
+    }
+
+    private fun prepareHeaderList(list: List<Country>): List<ListItem> {
+        val listItem = mutableListOf<ListItem>()
+        var previousHeader: Char? = null
+        list.sortedBy { it.name }.forEach { country ->
+            val current = country.name.first() // A
+            if (previousHeader == null || previousHeader != current) {
+                listItem.add(ListItem.HeaderListItem(current))
+                previousHeader = current
+            }
+            listItem.add(ListItem.CountryListItem(country))
+        }
+        return listItem
     }
 
     private fun onError(message: String) {
